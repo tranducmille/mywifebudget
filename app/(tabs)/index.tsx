@@ -79,17 +79,15 @@ export default function Dashboard() {
     </TouchableOpacity>
   );
 
-  const QuickAction = ({ title, icon: Icon, onPress, color }: any) => (
-    <TouchableOpacity style={styles.quickAction} onPress={onPress}>
-      <View style={[styles.quickActionIcon, { backgroundColor: color }]}>
-        <Icon size={24} color="#FFF" />
-      </View>
-      <Text style={styles.quickActionText}>{title}</Text>
+  const FloatingAction = ({ icon: Icon, onPress, color, style }: any) => (
+    <TouchableOpacity style={[styles.floatingAction, { backgroundColor: color }, style]} onPress={onPress}>
+      <Icon size={24} color="#FFF" />
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* Header */}
         <View style={styles.header}>
@@ -149,36 +147,6 @@ export default function Dashboard() {
           />
         </View>
 
-        {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.quickActionsGrid}>
-            <QuickAction
-              title="Add Expense"
-              icon={CreditCard}
-              color="#FF3B30"
-              onPress={() => {}}
-            />
-            <QuickAction
-              title="Add Income"
-              icon={Wallet}
-              color="#34C759"
-              onPress={() => {}}
-            />
-            <QuickAction
-              title="Set Budget"
-              icon={Target}
-              color="#007AFF"
-              onPress={() => {}}
-            />
-            <QuickAction
-              title="Schedule Bill"
-              icon={Calendar}
-              color="#FF9500"
-              onPress={() => {}}
-            />
-          </View>
-        </View>
 
         {/* Expense Categories Chart */}
         <View style={styles.section}>
@@ -187,7 +155,7 @@ export default function Dashboard() {
             <PieChart
               data={expenseCategories}
               width={screenWidth - 40}
-              height={220}
+              height={200}
               chartConfig={{
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               }}
@@ -206,7 +174,7 @@ export default function Dashboard() {
             <LineChart
               data={monthlyTrend}
               width={screenWidth - 40}
-              height={220}
+              height={200}
               yAxisLabel="$"
               chartConfig={{
                 backgroundColor: isDark ? '#1C1C1E' : '#FFF',
@@ -255,8 +223,40 @@ export default function Dashboard() {
             </View>
           </View>
         </View>
+
+        {/* Bottom padding for floating actions */}
+        <View style={{ height: 100 }} />
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+
+      {/* Floating Quick Actions */}
+      <View style={styles.floatingActionsContainer}>
+        <FloatingAction
+          icon={CreditCard}
+          color="#FF3B30"
+          style={styles.floatingAction1}
+          onPress={() => {}}
+        />
+        <FloatingAction
+          icon={Wallet}
+          color="#34C759"
+          style={styles.floatingAction2}
+          onPress={() => {}}
+        />
+        <FloatingAction
+          icon={Target}
+          color="#007AFF"
+          style={styles.floatingAction3}
+          onPress={() => {}}
+        />
+        <FloatingAction
+          icon={Calendar}
+          color="#FF9500"
+          style={styles.floatingAction4}
+          onPress={() => {}}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -264,6 +264,9 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: isDark ? '#000' : '#F2F2F7',
+  },
+  safeArea: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,
@@ -277,18 +280,22 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
     marginBottom: 30,
   },
   greeting: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     color: isDark ? '#FFF' : '#000',
     marginBottom: 4,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Inter-Medium',
     color: isDark ? '#8E8E93' : '#8E8E93',
+    letterSpacing: -0.2,
   },
   notificationButton: {
-    padding: 12,
-    borderRadius: 24,
+    padding: 14,
+    borderRadius: 28,
     backgroundColor: isDark ? '#1C1C1E' : '#FFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -298,7 +305,8 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
   },
   balanceCard: {
     marginBottom: 30,
-    borderRadius: 20,
+    borderRadius: 24,
+    height: 180,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -307,19 +315,26 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
     elevation: 8,
   },
   balanceGradient: {
-    padding: 24,
+    padding: 28,
+    flex: 1,
+    justifyContent: 'center',
   },
   balanceLabel: {
     color: '#FFF',
-    fontSize: 16,
+    fontSize: 15,
+    fontFamily: 'Inter-Medium',
     opacity: 0.9,
     marginBottom: 8,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
   balanceAmount: {
     color: '#FFF',
-    fontSize: 36,
+    fontSize: 42,
     fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     marginBottom: 20,
+    letterSpacing: -1,
   },
   balanceDetails: {
     flexDirection: 'row',
@@ -330,14 +345,19 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
   },
   balanceItemLabel: {
     color: '#FFF',
-    fontSize: 14,
+    fontSize: 13,
+    fontFamily: 'Inter-Medium',
     opacity: 0.8,
     marginBottom: 4,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
   },
   balanceItemAmount: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
+    fontFamily: 'Inter-SemiBold',
+    letterSpacing: -0.3,
   },
   incomeColor: {
     color: '#30D158',
@@ -352,7 +372,8 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    borderRadius: 16,
+    borderRadius: 20,
+    height: 140,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -361,24 +382,29 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
     elevation: 4,
   },
   statGradient: {
-    padding: 20,
+    padding: 24,
+    flex: 1,
+    justifyContent: 'space-between',
   },
   statHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
   },
   statTitle: {
     color: '#FFF',
-    fontSize: 14,
+    fontSize: 13,
+    fontFamily: 'Inter-Medium',
     marginLeft: 8,
     opacity: 0.9,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
   },
   statAmount: {
     color: '#FFF',
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 12,
+    fontFamily: 'Inter-Bold',
+    letterSpacing: -0.5,
   },
   trendContainer: {
     flexDirection: 'row',
@@ -389,55 +415,60 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
     alignSelf: 'flex-start',
   },
   trendText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
+    fontFamily: 'Inter-SemiBold',
     marginLeft: 4,
+    letterSpacing: 0.2,
   },
   section: {
     marginBottom: 30,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     color: isDark ? '#FFF' : '#000',
     marginBottom: 16,
+    letterSpacing: -0.3,
   },
-  quickActionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 15,
-    justifyContent: 'space-between',
+  floatingActionsContainer: {
+    position: 'absolute',
+    right: 20,
+    top: '50%',
+    transform: [{ translateY: -120 }],
+    zIndex: 1000,
   },
-  quickAction: {
-    width: (screenWidth - 60) / 2,
-    backgroundColor: isDark ? '#1C1C1E' : '#FFF',
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  quickActionIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  floatingAction: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  quickActionText: {
-    color: isDark ? '#FFF' : '#000',
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
+  floatingAction1: {
+    transform: [{ scale: 1 }],
+  },
+  floatingAction2: {
+    transform: [{ scale: 0.9 }],
+  },
+  floatingAction3: {
+    transform: [{ scale: 0.85 }],
+  },
+  floatingAction4: {
+    transform: [{ scale: 0.8 }],
   },
   chartContainer: {
     backgroundColor: isDark ? '#1C1C1E' : '#FFF',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 20,
+    padding: 20,
+    minHeight: 240,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -446,12 +477,13 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
   },
   chart: {
     marginVertical: 8,
-    borderRadius: 16,
+    borderRadius: 20,
   },
   goalCard: {
     backgroundColor: isDark ? '#1C1C1E' : '#FFF',
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 20,
+    padding: 24,
+    height: 120,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -465,33 +497,39 @@ const createStyles = (isDark: boolean) => StyleSheet.create({
     marginBottom: 16,
   },
   goalTitle: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '600',
+    fontFamily: 'Inter-SemiBold',
     color: isDark ? '#FFF' : '#000',
+    letterSpacing: -0.2,
   },
   goalAmount: {
-    fontSize: 16,
+    fontSize: 15,
+    fontFamily: 'Inter-Medium',
     color: isDark ? '#8E8E93' : '#8E8E93',
     fontWeight: '500',
+    letterSpacing: -0.1,
   },
   progressBarContainer: {
     alignItems: 'center',
   },
   progressBarBg: {
     width: '100%',
-    height: 8,
+    height: 6,
     backgroundColor: isDark ? '#2C2C2E' : '#E5E5EA',
-    borderRadius: 4,
+    borderRadius: 3,
     marginBottom: 8,
   },
   progressBarFill: {
-    height: 8,
+    height: 6,
     backgroundColor: '#007AFF',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   progressText: {
-    fontSize: 14,
+    fontSize: 13,
+    fontFamily: 'Inter-Medium',
     color: isDark ? '#8E8E93' : '#8E8E93',
     fontWeight: '500',
+    letterSpacing: 0.2,
   },
 });
