@@ -391,7 +391,7 @@ export default function Expenses() {
 const createStyles = (isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
-      
+        backgroundColor: isDark ? '#F8FAFC' : '#F8FAFC',
 
   },
   header: {
